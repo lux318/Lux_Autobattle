@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Jobs;
 using UnityEngine.Pool;
 
 public class CardsPooler : MonoBehaviour
@@ -35,14 +36,22 @@ public class CardsPooler : MonoBehaviour
 
     public void RandomizePool()
     {
-        //Clear actual active cards list
+        //Clear actual active cards list keeping selected cards
         foreach (var activeCard in activeCards)
-            bulletPool.Release(activeCard);
+        {
+            if (!DeckManager.Instance.SelectedCards.Contains(activeCard))
+                bulletPool.Release(activeCard);
+        }
         activeCards.Clear();
+
+        //Add to the list again the cards that we keep
+        foreach (var selectedCard in DeckManager.Instance.SelectedCards)
+            activeCards.Add(selectedCard);
 
         //Create needed cards and initialize those using random scriptable
         Random.InitState((int)System.DateTime.Now.Ticks);
-        for (int i = 0; i < initialPoolSize; i++)
+        int count = initialPoolSize - activeCards.Count;
+        for (int i = 0; i < count; i++)
         {
             int randomIndex = Random.Range(0, basicCardScriptables.Length);
             BasicCardScriptable cardScriptable = basicCardScriptables[randomIndex];
