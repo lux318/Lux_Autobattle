@@ -33,4 +33,9 @@ public class DeckManager : Singleton<DeckManager>
         if (maxCardsCount - 1 == selectedCards.Count)
             LastCardRemoved?.Invoke();
     }
+
+    public void ClearCards()
+    {
+        selectedCards.Clear();
+    }
 }

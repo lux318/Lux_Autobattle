@@ -28,24 +28,27 @@ public class BasicCard : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI speedLabel;
 
-    private BasicCardScriptable actualStats;
+    public BasicCardScriptable actualStats;
 
     private void Start()
     {
         selectButton.onClick.AddListener(OnSelect);
         deselectButton.onClick.AddListener(OnDeselect);
-        selectButton.gameObject.SetActive(true);
-        deselectButton.gameObject.SetActive(false);
-        bgImage.color = unselectedColor;
     }
 
     public void Initialize(BasicCardScriptable card)
     {
+        //Initialize data
         actualStats = card;
         nameLabel.text = card.cardName;
         hpLabel.text = card.hp.ToString();
         atkLabel.text = card.atk.ToString();
         speedLabel.text = card.speed.ToString();
+
+        //Reset graphic
+        selectButton.gameObject.SetActive(true);
+        deselectButton.gameObject.SetActive(false);
+        bgImage.color = unselectedColor;
     }
 
     public void OnSelect()

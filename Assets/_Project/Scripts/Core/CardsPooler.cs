@@ -60,6 +60,16 @@ public class CardsPooler : MonoBehaviour
         }
     }
 
+    public void ClearPool()
+    {
+        foreach (var activeCard in activeCards)
+        {
+            bulletPool.Release(activeCard);
+        }
+        activeCards.Clear();
+        DeckManager.Instance.ClearCards();
+    }
+
 
     #region BulletPooling
     //Initialize pool

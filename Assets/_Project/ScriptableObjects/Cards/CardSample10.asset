@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: CardSample10
   m_EditorClassIdentifier: 
   cardName: Mary
-  hp: 50
-  atk: 0
+  hp: 25
+  atk: 1
   speed: 0
