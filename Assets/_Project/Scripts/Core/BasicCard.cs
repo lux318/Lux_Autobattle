@@ -53,6 +53,9 @@ public class BasicCard : MonoBehaviour
 
     public void OnSelect()
     {
+        if (DeckManager.Instance.HasReachMaxLenght())
+            return;
+
         //Change bg color
         bgImage.color = selectedColor;
         //Switch buttons
