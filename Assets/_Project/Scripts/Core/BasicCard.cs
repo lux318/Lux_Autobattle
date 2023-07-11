@@ -53,7 +53,7 @@ public class BasicCard : MonoBehaviour
 
     public void OnSelect()
     {
-        if (DeckManager.Instance.HasReachMaxLenght())
+        if (DeckManager.Instance.HasReachMaxLength())
             return;
 
         //Change bg color

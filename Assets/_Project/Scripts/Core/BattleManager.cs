@@ -49,18 +49,19 @@ public class BattleManager : MonoBehaviour
 
     public void SetUpBattle()
     {
-        combatResult = CombatResult.None;
-        BattleStarted?.Invoke();
 
-        combatLabel.text = "";
-        combatLabel.text += "Your Deck: ";
-        foreach (var card in DeckManager.Instance.SelectedCards)
-            combatLabel.text += $"{card.actualStats.cardName} ({card.actualStats.hp}hp, {card.actualStats.atk}atk, {card.actualStats.speed}spe) ";
-        combatLabel.text += "\n";
-        combatLabel.text += "AI Deck: ";
-        foreach (var card in aiDeck)
-            combatLabel.text += $"{card.cardName}({card.hp}hp, {card.atk}atk, {card.speed}spe) ";
-        combatLabel.text += "\n";
+        //combatResult = CombatResult.None;
+        //BattleStarted?.Invoke();
+
+        //combatLabel.text = "";
+        //combatLabel.text += "Your Deck: ";
+        //foreach (var card in DeckManager.Instance.SelectedCards)
+        //    combatLabel.text += $"{card.actualStats.cardName} ({card.actualStats.hp}hp, {card.actualStats.atk}atk, {card.actualStats.speed}spe) ";
+        //combatLabel.text += "\n";
+        //combatLabel.text += "AI Deck: ";
+        //foreach (var card in aiDeck)
+        //    combatLabel.text += $"{card.cardName}({card.hp}hp, {card.atk}atk, {card.speed}spe) ";
+        //combatLabel.text += "\n";
 
         StartCoroutine(CombatPhase());
     }

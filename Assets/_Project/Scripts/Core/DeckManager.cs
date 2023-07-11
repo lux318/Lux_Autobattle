@@ -39,7 +39,7 @@ public class DeckManager : Singleton<DeckManager>
         selectedCards.Clear();
     }
 
-    public bool HasReachMaxLenght()
+    public bool HasReachMaxLength()
     {
         return selectedCards.Count == maxCardsCount;
     }
