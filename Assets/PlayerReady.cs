@@ -6,22 +6,51 @@ using UnityEngine;
 
 public class PlayerReady : NetworkBehaviour
 {
+    public BasicCard cardPrefab;
 
+    void Start()
+    {
+        if (IsClient)
+        {
+            Debug.Log("Hello client");
+        }
+    }
 
+    private void OnClientConnected(ulong clientId)
+    {
+        if (clientId == NetworkManager.Singleton.LocalClientId)
+        {
+            Debug.Log("Client id: " + clientId);
+        }
+    }
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         Player.Instance.OnReady += Test_OnReady;
     }
 
-    private void Test_OnReady(object sender, Player.OnReadyEventArgs e)
+    private void Test_OnReady(object sender, Player.DataCardsStructNetwork e)
     {
-        SendInfoServerRpc(e.nameCard, e.idCard);
+        SendInfoServerRpc(e);
     }
 
+    //private void Test_OnReady(object sender, Player.OnReadyEventArgs e)
+    //{
+    //    SendInfoServerRpc(e.nameCard, e.idCard);
+    //}
+
     [ServerRpc]
-    private void SendInfoServerRpc(string nameCard, int idCard)
-    {
-        Debug.Log("User: " + OwnerClientId + " Id Card: " + idCard + " Name Card: " + nameCard);
+    private void SendInfoServerRpc(Player.DataCardsStructNetwork e)
+    { 
+        BasicCardScriptable basicCardScriptable = new BasicCardScriptable();
+        basicCardScriptable.cardName = e.nameCard;
+        basicCardScriptable.hp = e.hpCard;
+        basicCardScriptable.atk = e.atkCard;
+        basicCardScriptable.speed = e.speedCard;
+        var basicCard = Instantiate(cardPrefab);
+        basicCard.Initialize(basicCardScriptable);
+        basicCard.gameObject.SetActive(false);
+        FindObjectOfType<BattleManager>().aiCards.Add(basicCard);
+        Debug.Log(String.Format("User: " + OwnerClientId + " Name Card: {0} \n Hp Card {1} \n Atk Card {2} \n Speed Card {3}", e.nameCard, e.hpCard, e.atkCard, e.speedCard));
     }
 }

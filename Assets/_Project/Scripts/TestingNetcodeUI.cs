@@ -8,9 +8,7 @@ using UnityEngine.UI;
 public class TestingNetcodeUI : MonoBehaviour
 {
     [SerializeField] Button startHostBtn;
-    [SerializeField] Button startServerBtn;
     [SerializeField] Button startClientBtn;
-    [SerializeField] TMP_InputField inputUserName;
 
 
     private void Awake()
@@ -19,13 +17,6 @@ public class TestingNetcodeUI : MonoBehaviour
         {
             Debug.Log("HOST");
             NetworkManager.Singleton.StartHost();
-            Hide();
-        });
-
-        startServerBtn.onClick.AddListener(() =>
-        {
-            Debug.Log("Server");
-            NetworkManager.Singleton.StartServer();
             Hide();
         });
 

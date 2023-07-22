@@ -11,7 +11,7 @@ public class BattleManager : MonoBehaviour
     //Eventually to move in a dedicated AI script
     public BasicCardScriptable[] aiDeck;
     public BasicCard cardPrefab;
-    private List<BasicCard> aiCards;
+    public List<BasicCard> aiCards;
 
     public TextMeshProUGUI combatLabel;
 
@@ -38,30 +38,30 @@ public class BattleManager : MonoBehaviour
     {
         //JUST FOR TEST STUFF. TO DO: PASS THE OTHER DECK
         aiCards = new List<BasicCard>();
-        foreach (var card in aiDeck)
-        {
-            var basicCard = Instantiate(cardPrefab);
-            basicCard.Initialize(card);
-            basicCard.gameObject.SetActive(false);
-            aiCards.Add(basicCard);
-        }
+        //foreach (var card in aiDeck)
+        //{
+        //    var basicCard = Instantiate(cardPrefab);
+        //    basicCard.Initialize(card);
+        //    basicCard.gameObject.SetActive(false);
+        //    aiCards.Add(basicCard);
+        //}
     }
 
     public void SetUpBattle()
     {
 
-        //combatResult = CombatResult.None;
-        //BattleStarted?.Invoke();
+        combatResult = CombatResult.None;
+        BattleStarted?.Invoke();
 
-        //combatLabel.text = "";
-        //combatLabel.text += "Your Deck: ";
-        //foreach (var card in DeckManager.Instance.SelectedCards)
-        //    combatLabel.text += $"{card.actualStats.cardName} ({card.actualStats.hp}hp, {card.actualStats.atk}atk, {card.actualStats.speed}spe) ";
-        //combatLabel.text += "\n";
-        //combatLabel.text += "AI Deck: ";
-        //foreach (var card in aiDeck)
-        //    combatLabel.text += $"{card.cardName}({card.hp}hp, {card.atk}atk, {card.speed}spe) ";
-        //combatLabel.text += "\n";
+        combatLabel.text = "";
+        combatLabel.text += "Your Deck: ";
+        foreach (var card in DeckManager.Instance.SelectedCards)
+            combatLabel.text += $"{card.actualStats.cardName} ({card.actualStats.hp}hp, {card.actualStats.atk}atk, {card.actualStats.speed}spe) ";
+        combatLabel.text += "\n";
+        combatLabel.text += "AI Deck: ";
+        foreach (var card in aiDeck)
+            combatLabel.text += $"{card.cardName}({card.hp}hp, {card.atk}atk, {card.speed}spe) ";
+        combatLabel.text += "\n";
 
         StartCoroutine(CombatPhase());
     }
@@ -105,7 +105,7 @@ public class BattleManager : MonoBehaviour
             {
                 case CombatResult.None:
                     combatLabel.text += $"--- Start combat between {player1.reference.actualStats.cardName} ({player1.currentHp}hp) and {player2.reference.actualStats.cardName} ({player2.currentHp}hp) \n";
-
+                    Debug.Log(combatLabel.text);
                     //Made card battles
                     bool hasWinner = false;
                     while (hasWinner == false)
@@ -129,11 +129,13 @@ public class BattleManager : MonoBehaviour
 
                 case CombatResult.P1Wins:
                     combatLabel.text += $"P1 wins the battle";
+                    Debug.Log("P1 win");
                     BattleEnded?.Invoke();
                     yield break;
 
                 case CombatResult.P2Wins:
                     combatLabel.text += $"P2 wins the battle";
+                    Debug.Log("P2 win");
                     BattleEnded?.Invoke();
                     yield break;
             }
@@ -150,10 +152,12 @@ public class BattleManager : MonoBehaviour
     public bool Battle(BattlePlayer attack, ref BattlePlayer defense)
     {
         combatLabel.text += $"-> {attack.reference.actualStats.cardName} hit for {attack.reference.actualStats.atk} ";
+        Debug.Log(combatLabel.text);
         defense.currentHp -= attack.reference.actualStats.atk;
         if (defense.currentHp <= 0)
         {
             combatLabel.text += $"-> {defense.reference.actualStats.cardName} is defeated\n";
+            Debug.Log(combatLabel.text);
             defense = new BattlePlayer();
             return true;
         }

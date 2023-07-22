@@ -7,11 +7,45 @@ using System.Text;
 
 public class Player : NetworkBehaviour
 {
+    [HideInInspector]
+    public struct DataCardsStructNetwork : INetworkSerializable
+    {
+        public string nameCard;
+        public int hpCard;
+        public int atkCard;
+        public int speedCard;
 
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T: IReaderWriter
+        {
+            serializer.SerializeValue(ref nameCard);
+            serializer.SerializeValue(ref hpCard);
+            serializer.SerializeValue(ref atkCard);
+            serializer.SerializeValue(ref speedCard);
+        }
+    }
 
+    [HideInInspector]
+    public struct DataCardsStruct
+    {
+        public string nameCard;
+        public int hpCard;
+        public int atkCard;
+        public int speedCard;
+
+        public void DataCards(string _nameCard, int _hpCard, int _atkCard, int _speedCard)
+        { 
+            this.nameCard = _nameCard;
+            this.hpCard = _hpCard;
+            this.atkCard = _atkCard;
+            this.speedCard = _speedCard;
+        }
+
+    }
     public static Player Instance { get; private set; }
 
-    public event EventHandler<OnReadyEventArgs> OnReady;
+    public event EventHandler<DataCardsStructNetwork> OnReady;
+    public event EventHandler<DataCardsStruct> UIOnReady;
+
 
     private string namePlayer;
 
@@ -37,30 +71,18 @@ public class Player : NetworkBehaviour
         if(!IsOwner) return;
         if (Input.GetKeyDown(KeyCode.E))
         {
-            OnReady?.Invoke(Instance, new OnReadyEventArgs{
-                idCard = 99,
-                nameCard = "Barbaro"
-            });
+            foreach (BasicCard card in DeckManager.Instance.SelectedCards)
+            {
+                OnReady?.Invoke(Instance, new DataCardsStructNetwork
+                {
+                    nameCard = card.actualStats.cardName,
+                    hpCard = card.actualStats.hp,
+                    atkCard = card.actualStats.atk,
+                    speedCard = card.actualStats.speed
+                });
+            }
         }
-
-        if (Input.GetKeyDown(KeyCode.A))
-            MovementServerAuth();
     }
-
-
-    void MovementServerAuth()
-    {
-        
-        MovementServerRPC();
-    }
-
-
-    [ServerRpc(RequireOwnership = false)]
-    void MovementServerRPC()
-    {
-        transform.position = transform.position - new Vector3(1, 0, 0);
-    }
-
 
 
     [ServerRpc]
