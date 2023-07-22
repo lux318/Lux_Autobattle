@@ -31,6 +31,7 @@ public class PlayerReady : NetworkBehaviour
 
     private void Test_OnReady(object sender, Player.DataCardsStructNetwork e)
     {
+        //Aggiungi un check
         SendInfoServerRpc(e);
     }
 
