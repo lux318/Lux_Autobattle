@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class DeckManager : Singleton<DeckManager>
 {
     [SerializeField]
@@ -43,4 +47,35 @@ public class DeckManager : Singleton<DeckManager>
     {
         return selectedCards.Count == maxCardsCount;
     }
+
+    ////////////////////////////////// USE DTO ////////////////////////////////////////
+    public void SubmitDeck()
+    {
+        DeckContainerDTO deckContainerDTo = new DeckContainerDTO();
+
+        deckContainerDTo.deck.DiceResult = 20;
+        foreach (var card in selectedCards)
+        {
+            deckContainerDTo.deck.Cards.Add(new Card(card.actualStats.cardID, 1)); //TODO add level
+        }
+
+        string json = JsonUtility.ToJson(deckContainerDTo);
+        Debug.Log(json);
+        //Store the json somewhere
+    }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(DeckManager))]
+public class DeckManagerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        DeckManager deckManager = (DeckManager)target;
+
+        if (GUILayout.Button("Submit deck"))
+            deckManager.SubmitDeck();
+    }
+}
+#endif
