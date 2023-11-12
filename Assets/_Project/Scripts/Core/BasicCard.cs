@@ -28,6 +28,8 @@ public class BasicCard : MonoBehaviour
     private TextMeshProUGUI atkLabel;
     [SerializeField]
     private TextMeshProUGUI speedLabel;
+    [SerializeField]
+    private Image sprite;
 
     public BasicCardScriptable actualStats;
 
@@ -45,6 +47,7 @@ public class BasicCard : MonoBehaviour
         hpLabel.text = card.hp.ToString();
         atkLabel.text = card.atk.ToString();
         speedLabel.text = card.speed.ToString();
+        sprite.sprite = card.sprite;
 
         //Reset graphic
         selectButton.gameObject.SetActive(true);

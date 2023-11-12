@@ -6,6 +6,7 @@ using UnityEngine;
 public class BasicCardScriptable : ScriptableObject
 {
     public string cardName;
+    public Sprite sprite;
     public int hp;
     public int atk;
     public int speed;

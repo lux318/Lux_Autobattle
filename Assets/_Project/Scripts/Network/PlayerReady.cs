@@ -26,10 +26,10 @@ public class PlayerReady : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        Player.Instance.OnReady += Test_OnReady;
+        PlayerLocal.Instance.OnReady += Test_OnReady;
     }
 
-    private void Test_OnReady(object sender, Player.DataCardsStructNetwork e)
+    private void Test_OnReady(object sender, PlayerLocal.DataCardsStructNetwork e)
     {
         //Aggiungi un check
         SendInfoServerRpc(e);
@@ -41,7 +41,7 @@ public class PlayerReady : NetworkBehaviour
     //}
 
     [ServerRpc]
-    private void SendInfoServerRpc(Player.DataCardsStructNetwork e)
+    private void SendInfoServerRpc(PlayerLocal.DataCardsStructNetwork e)
     { 
         BasicCardScriptable basicCardScriptable = new BasicCardScriptable();
         basicCardScriptable.cardName = e.nameCard;

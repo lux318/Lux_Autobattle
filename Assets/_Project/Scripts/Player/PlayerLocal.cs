@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Text;
 
-public class Player : NetworkBehaviour
+public class PlayerLocal : NetworkBehaviour
 {
     [HideInInspector]
     public struct DataCardsStructNetwork : INetworkSerializable
@@ -41,7 +41,7 @@ public class Player : NetworkBehaviour
         }
 
     }
-    public static Player Instance { get; private set; }
+    public static PlayerLocal Instance { get; private set; }
 
     public event EventHandler<DataCardsStructNetwork> OnReady;
     public event EventHandler<DataCardsStruct> UIOnReady;

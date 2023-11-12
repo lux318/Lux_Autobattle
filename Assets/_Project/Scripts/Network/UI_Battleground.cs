@@ -10,10 +10,10 @@ public class UI_Battleground : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Player.Instance.UIOnReady += Test_UIOnReady;
+        PlayerLocal.Instance.UIOnReady += Test_UIOnReady;
     }
 
-    private void Test_UIOnReady(object sender, Player.DataCardsStruct e)
+    private void Test_UIOnReady(object sender, PlayerLocal.DataCardsStruct e)
     {
         
     }

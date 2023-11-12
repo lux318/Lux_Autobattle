@@ -205,7 +205,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224130951485110974, guid: 9ed2a051c32b4fe47a5e4fb95c20b03f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000015258789
+      value: 0.000045776367
       objectReference: {fileID: 0}
     - target: {fileID: 224166536479716514, guid: 9ed2a051c32b4fe47a5e4fb95c20b03f, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2066,16 +2066,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   basicCardScriptables:
-  - {fileID: 11400000, guid: 99929cfc36bc49a4aaa724d4557d724f, type: 2}
-  - {fileID: 11400000, guid: f8853965c1608eb49892ded142ee452c, type: 2}
-  - {fileID: 11400000, guid: f779b9d5e2cd8394f833af92e65ef0e8, type: 2}
-  - {fileID: 11400000, guid: 51531f061ca983c4b8dfbf9a840e5333, type: 2}
-  - {fileID: 11400000, guid: 560f99c677f7c4948b03f7d3a62ac251, type: 2}
-  - {fileID: 11400000, guid: 7be377a6de9b6d04fb8ddcfc1b84d396, type: 2}
-  - {fileID: 11400000, guid: 84f836c6e12005c4a8f6a45606a7ebcf, type: 2}
-  - {fileID: 11400000, guid: 05d1ecd2cf26fd04a85cee6607f7fd8f, type: 2}
-  - {fileID: 11400000, guid: c23457167c17d574f87c60bd9ca64220, type: 2}
-  - {fileID: 11400000, guid: c5929687e5a752148abd2e2e93225299, type: 2}
+  - {fileID: 11400000, guid: 5950679811e3ae743ba7f77e49974a4b, type: 2}
+  - {fileID: 11400000, guid: 95cafcfcf6c4d3049b18b591c7d3ef95, type: 2}
+  - {fileID: 11400000, guid: bf96234e92172bb439522b6c07f0b8eb, type: 2}
+  - {fileID: 11400000, guid: be94d38700c7d074caa7f7992097e316, type: 2}
   basicCardPrefab: {fileID: 3776450632147278796, guid: 00cc4adc0f2590f4c8494d0bf27b8210, type: 3}
   cardsParent: {fileID: 116135023}
   initialPoolSize: 3
