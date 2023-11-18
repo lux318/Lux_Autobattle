@@ -26,32 +26,17 @@ public class PlayerReady : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        PlayerLocal.Instance.OnReady += Test_OnReady;
     }
 
-    private void Test_OnReady(object sender, PlayerLocal.DataCardsStructNetwork e)
-    {
-        //Aggiungi un check
-        SendInfoServerRpc(e);
-    }
+    //private void Test_OnReady(object sender, PlayerLocal. e)
+    //{
+    //    //Aggiungi un check
+    //    DeckContainerDTO playerDeck = new DeckContainerDTO();
+    //    playerDeck.deck.Cards.Add()
+    //}
 
     //private void Test_OnReady(object sender, Player.OnReadyEventArgs e)
     //{
     //    SendInfoServerRpc(e.nameCard, e.idCard);
     //}
-
-    [ServerRpc]
-    private void SendInfoServerRpc(PlayerLocal.DataCardsStructNetwork e)
-    { 
-        BasicCardScriptable basicCardScriptable = new BasicCardScriptable();
-        basicCardScriptable.cardName = e.nameCard;
-        basicCardScriptable.hp = e.hpCard;
-        basicCardScriptable.atk = e.atkCard;
-        basicCardScriptable.speed = e.speedCard;
-        var basicCard = Instantiate(cardPrefab);
-        basicCard.Initialize(basicCardScriptable);
-        basicCard.gameObject.SetActive(false);
-        FindObjectOfType<BattleManager>().aiCards.Add(basicCard);
-        Debug.Log(String.Format("User: " + OwnerClientId + " Name Card: {0} \n Hp Card {1} \n Atk Card {2} \n Speed Card {3}", e.nameCard, e.hpCard, e.atkCard, e.speedCard));
-    }
 }

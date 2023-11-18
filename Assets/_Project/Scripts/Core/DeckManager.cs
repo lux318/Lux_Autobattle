@@ -14,6 +14,8 @@ public class DeckManager : Singleton<DeckManager>
 
     private List<BasicCard> selectedCards;
 
+    private string jsonDeck;
+
     public UnityEvent LastCardAdded;
     public UnityEvent LastCardRemoved;
 
@@ -59,9 +61,14 @@ public class DeckManager : Singleton<DeckManager>
             deckContainerDTo.deck.Cards.Add(new Card(card.actualStats.cardID, 1)); //TODO add level
         }
 
-        string json = JsonUtility.ToJson(deckContainerDTo);
-        Debug.Log(json);
+        jsonDeck = JsonUtility.ToJson(deckContainerDTo);
+        Debug.Log(jsonDeck);
         //Store the json somewhere
+    }
+
+    public string GetJsonDeck()
+    {
+        return jsonDeck;
     }
 }
 

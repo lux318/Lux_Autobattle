@@ -47,100 +47,100 @@ public class BattleManager : MonoBehaviour
         //}
     }
 
-    public void SetUpBattle()
-    {
+    //public void SetUpBattle()
+    //{
 
-        combatResult = CombatResult.None;
-        BattleStarted?.Invoke();
+    //    combatResult = CombatResult.None;
+    //    BattleStarted?.Invoke();
 
-        combatLabel.text = "";
-        combatLabel.text += "Your Deck: ";
-        foreach (var card in DeckManager.Instance.SelectedCards)
-            combatLabel.text += $"{card.actualStats.cardName} ({card.actualStats.hp}hp, {card.actualStats.atk}atk, {card.actualStats.speed}spe) ";
-        combatLabel.text += "\n";
-        combatLabel.text += "AI Deck: ";
-        foreach (var card in aiDeck)
-            combatLabel.text += $"{card.cardName}({card.hp}hp, {card.atk}atk, {card.speed}spe) ";
-        combatLabel.text += "\n";
+    //    combatLabel.text = "";
+    //    combatLabel.text += "Your Deck: ";
+    //    foreach (var card in DeckManager.Instance.SelectedCards)
+    //        combatLabel.text += $"{card.actualStats.cardName} ({card.actualStats.hp}hp, {card.actualStats.atk}atk, {card.actualStats.speed}spe) ";
+    //    combatLabel.text += "\n";
+    //    combatLabel.text += "AI Deck: ";
+    //    foreach (var card in aiDeck)
+    //        combatLabel.text += $"{card.cardName}({card.hp}hp, {card.atk}atk, {card.speed}spe) ";
+    //    combatLabel.text += "\n";
 
-        StartCoroutine(CombatPhase());
-    }
+    //    StartCoroutine(CombatPhase());
+    //}
 
-    public IEnumerator CombatPhase()
-    {
-        //JUST FOR TEST STUFF
-        Queue<BasicCard> playerQueue = new Queue<BasicCard>();
-        foreach (var playerCard in DeckManager.Instance.SelectedCards)
-            playerQueue.Enqueue(playerCard);
+    //public IEnumerator CombatPhase()
+    //{
+    //    //JUST FOR TEST STUFF
+    //    Queue<BasicCard> playerQueue = new Queue<BasicCard>();
+    //    foreach (var playerCard in DeckManager.Instance.SelectedCards)
+    //        playerQueue.Enqueue(playerCard);
 
-        Queue<BasicCard> aiQueue = new Queue<BasicCard>();
-        foreach (var aiCard in aiCards)
-            aiQueue.Enqueue(aiCard);
-        //
+    //    Queue<BasicCard> aiQueue = new Queue<BasicCard>();
+    //    foreach (var aiCard in aiCards)
+    //        aiQueue.Enqueue(aiCard);
+    //    //
 
-        BattlePlayer player1 = new BattlePlayer();
-        BattlePlayer player2 = new BattlePlayer();
+    //    BattlePlayer player1 = new BattlePlayer();
+    //    BattlePlayer player2 = new BattlePlayer();
 
-        while (true)
-        {
-            //Take first elemnt of the queue
-            yield return null;
-            if (player1.reference == null)
-            {
-                if (playerQueue.Count == 0)
-                    combatResult = CombatResult.P2Wins;
-                else
-                    player1 = GetPlayer(playerQueue);
-            }
+    //    while (true)
+    //    {
+    //        //Take first elemnt of the queue
+    //        yield return null;
+    //        if (player1.reference == null)
+    //        {
+    //            if (playerQueue.Count == 0)
+    //                combatResult = CombatResult.P2Wins;
+    //            else
+    //                player1 = GetPlayer(playerQueue);
+    //        }
 
-            if (player2.reference == null)
-            {
-                if (aiQueue.Count == 0)
-                    combatResult = CombatResult.P1Wins;
-                else
-                    player2 = GetPlayer(aiQueue);
-            }
+    //        if (player2.reference == null)
+    //        {
+    //            if (aiQueue.Count == 0)
+    //                combatResult = CombatResult.P1Wins;
+    //            else
+    //                player2 = GetPlayer(aiQueue);
+    //        }
 
-            switch (combatResult)
-            {
-                case CombatResult.None:
-                    combatLabel.text += $"--- Start combat between {player1.reference.actualStats.cardName} ({player1.currentHp}hp) and {player2.reference.actualStats.cardName} ({player2.currentHp}hp) \n";
-                    Debug.Log(combatLabel.text);
-                    //Made card battles
-                    bool hasWinner = false;
-                    while (hasWinner == false)
-                    {
-                        yield return null;
-                        //Determine 1st with speed
-                        if (player1.reference.actualStats.speed >= player2.reference.actualStats.speed) //TODO Calculate speed tie
-                        {
-                            hasWinner = Battle(player1, ref player2);
-                            if (!hasWinner)
-                                hasWinner = Battle(player2, ref player1);
-                        }
-                        else
-                        {
-                            hasWinner = Battle(player2, ref player1);
-                            if (!hasWinner)
-                                hasWinner = Battle(player1, ref player2);
-                        }
-                    }
-                    break;
+    //        switch (combatResult)
+    //        {
+    //            case CombatResult.None:
+    //                combatLabel.text += $"--- Start combat between {player1.reference.actualStats.cardName} ({player1.currentHp}hp) and {player2.reference.actualStats.cardName} ({player2.currentHp}hp) \n";
+    //                Debug.Log(combatLabel.text);
+    //                //Made card battles
+    //                bool hasWinner = false;
+    //                while (hasWinner == false)
+    //                {
+    //                    yield return null;
+    //                    //Determine 1st with speed
+    //                    if (player1.reference.actualStats.speed >= player2.reference.actualStats.speed) //TODO Calculate speed tie
+    //                    {
+    //                        hasWinner = Battle(player1, ref player2);
+    //                        if (!hasWinner)
+    //                            hasWinner = Battle(player2, ref player1);
+    //                    }
+    //                    else
+    //                    {
+    //                        hasWinner = Battle(player2, ref player1);
+    //                        if (!hasWinner)
+    //                            hasWinner = Battle(player1, ref player2);
+    //                    }
+    //                }
+    //                break;
 
-                case CombatResult.P1Wins:
-                    combatLabel.text += $"P1 wins the battle";
-                    Debug.Log("P1 win");
-                    BattleEnded?.Invoke();
-                    yield break;
+    //            case CombatResult.P1Wins:
+    //                combatLabel.text += $"P1 wins the battle";
+    //                Debug.Log("P1 win");
+    //                BattleEnded?.Invoke();
+    //                yield break;
 
-                case CombatResult.P2Wins:
-                    combatLabel.text += $"P2 wins the battle";
-                    Debug.Log("P2 win");
-                    BattleEnded?.Invoke();
-                    yield break;
-            }
-        }
-    }
+    //            case CombatResult.P2Wins:
+    //                combatLabel.text += $"P2 wins the battle";
+    //                Debug.Log("P2 win");
+    //                BattleEnded?.Invoke();
+    //                yield break;
+    //        }
+    //    }
+    //}
 
     public BattlePlayer GetPlayer(Queue<BasicCard> playersQueue)
     {

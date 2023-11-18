@@ -4,93 +4,64 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using System.Text;
+using QFSW.QC;
 
 public class PlayerLocal : NetworkBehaviour
 {
-    [HideInInspector]
-    public struct DataCardsStructNetwork : INetworkSerializable
-    {
-        public string nameCard;
-        public int hpCard;
-        public int atkCard;
-        public int speedCard;
-
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T: IReaderWriter
-        {
-            serializer.SerializeValue(ref nameCard);
-            serializer.SerializeValue(ref hpCard);
-            serializer.SerializeValue(ref atkCard);
-            serializer.SerializeValue(ref speedCard);
-        }
-    }
-
-    [HideInInspector]
-    public struct DataCardsStruct
-    {
-        public string nameCard;
-        public int hpCard;
-        public int atkCard;
-        public int speedCard;
-
-        public void DataCards(string _nameCard, int _hpCard, int _atkCard, int _speedCard)
-        { 
-            this.nameCard = _nameCard;
-            this.hpCard = _hpCard;
-            this.atkCard = _atkCard;
-            this.speedCard = _speedCard;
-        }
-
-    }
+    
     public static PlayerLocal Instance { get; private set; }
 
-    public event EventHandler<DataCardsStructNetwork> OnReady;
-    public event EventHandler<DataCardsStruct> UIOnReady;
-
-
+    public event EventHandler<DeckDTO> OnReady;
+    
     private string namePlayer;
 
-    public class OnReadyEventArgs: EventArgs
-    {
-        public int idCard;
-        public string nameCard;
-    }
+    private string jsonDeck;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         Instance = this;
-
         Debug.Log("Spawn By Network!");
-
+        jsonDeck = DeckManager.Instance.GetJsonDeck();
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        if(!IsOwner) return;
-        if (Input.GetKeyDown(KeyCode.E))
+        
+    }
+
+
+    [Command]
+    public void SendDeckInfo()
+    {
+        if (IsServer)
         {
-            foreach (BasicCard card in DeckManager.Instance.SelectedCards)
-            {
-                OnReady?.Invoke(Instance, new DataCardsStructNetwork
-                {
-                    nameCard = card.actualStats.cardName,
-                    hpCard = card.actualStats.hp,
-                    atkCard = card.actualStats.atk,
-                    speedCard = card.actualStats.speed
-                });
-            }
+            SendDeckInfoClientRpc(jsonDeck);
+        }
+        else
+        {
+            SendDeckInfoServerRpc(jsonDeck);
         }
     }
 
 
-    [ServerRpc]
-    public void MessageServerRpc()
+    [ClientRpc]
+    private void SendDeckInfoClientRpc(string jsonData)
     {
-        Debug.Log("TestServerRpc" + OwnerClientId);
+        if (IsOwner) return;
+        DeckContainerDTO deckDto = JsonUtility.FromJson<DeckContainerDTO>(jsonData);
+        Debug.Log("Server sent this : " + deckDto.ToString());
     }
-    
+
+    [ServerRpc]
+    private void SendDeckInfoServerRpc(string jsonData)
+    {
+        DeckContainerDTO deckDto = JsonUtility.FromJson<DeckContainerDTO>(jsonData);
+        Debug.Log("Client sent this : " + deckDto);
+    }
+
 
     public string GetNamePlayer() { return namePlayer; }
 
