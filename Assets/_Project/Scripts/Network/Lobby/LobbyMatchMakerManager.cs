@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using Unity.Services.Lobbies.Models;
 using Unity.Services.Lobbies;
 using UnityEngine;
-using static LobbyManager;
 using Unity.Services.Authentication;
-using QFSW.QC;
 using Unity.Services.Core;
-using System;
 
-public class LobbyMatchMakerManager : MonoBehaviour
+public class LobbyMatchMakerManager : Singleton<LobbyMatchMakerManager>
 {
-    public static LobbyMatchMakerManager Instance { get; private set; }
-
     public const string KEY_PLAYER_NAME = "PlayerName";
     public const string RELAY_CODE = "RELAY_CODE";
 

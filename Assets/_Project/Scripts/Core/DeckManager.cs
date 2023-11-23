@@ -71,8 +71,6 @@ public class DeckManager : Singleton<DeckManager>
         {
             if (zone.ActualCard != null)
                 selectedCards.Add(zone.ActualCard);
-
-            Debug.Log(zone.ActualCard);
         }
         
         if (selectedCards.Count > 0)
@@ -92,6 +90,9 @@ public class DeckManager : Singleton<DeckManager>
 
         jsonDeck = JsonUtility.ToJson(deckContainerDTo);
         Debug.Log(jsonDeck);
+
+        //Start the matchmaking
+        LobbyMatchMakerManager.Instance.CheckForLobbies();
     }
 
     public string GetJsonDeck()
