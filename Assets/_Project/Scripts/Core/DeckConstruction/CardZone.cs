@@ -84,13 +84,16 @@ public class CardZone : MonoBehaviour
             return;
         }
 
-        if (DeckManager.Instance.CardPlaced() && actualCard == null)
+        if (actualCard == null)
         {
-            actualCard = selectedCard;
-            OnCardUpdated?.Invoke();
+            if (DeckManager.Instance.CardPlaced())
+            {
+                actualCard = selectedCard;
+                OnCardUpdated?.Invoke();
 
-            //Graphics stuff!!
-            return;
+                //Graphics stuff!!
+                return;
+            }
         }
     }
 }
