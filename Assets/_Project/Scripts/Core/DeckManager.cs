@@ -42,7 +42,6 @@ public class DeckManager : Singleton<DeckManager>
     private void Start()
     {
         zones = new List<CardZone>(zones.OrderBy((t) => t.ZoneIndex).ToList());
-        selectedCards = new List<BasicCard>();
         SelectedCard = null;
         CardToSwitch = null;
     }
@@ -67,6 +66,7 @@ public class DeckManager : Singleton<DeckManager>
     //Put the selected cards in the deck in the correct order
     public void CreateOrderedDeck()
     {
+        selectedCards = new List<BasicCard>();
         foreach (var zone in zones)
         {
             if (zone.ActualCard != null)
@@ -74,7 +74,9 @@ public class DeckManager : Singleton<DeckManager>
 
             Debug.Log(zone.ActualCard);
         }
-        SubmitDeck();
+        
+        if (selectedCards.Count > 0)
+            SubmitDeck();
     }
 
     ////////////////////////////////// USE DTO ////////////////////////////////////////
