@@ -15,6 +15,7 @@ public class DeckManager : Singleton<DeckManager>
     private List<BasicCard> selectedCards;
     private string jsonDeck;
     private BasicCard selectedCard;
+    private BasicCard cardToSwitch;
 
     public BasicCard SelectedCard
     {
@@ -24,6 +25,12 @@ public class DeckManager : Singleton<DeckManager>
             selectedCard = value;
             OnCardSelected?.Invoke(selectedCard);
         }
+    }
+
+    public BasicCard CardToSwitch
+    {
+        get => cardToSwitch;
+        set => cardToSwitch = value;
     }
 
     public delegate void CardDelegate(BasicCard card);
@@ -37,16 +44,14 @@ public class DeckManager : Singleton<DeckManager>
         zones = new List<CardZone>(zones.OrderBy((t) => t.ZoneIndex).ToList());
         selectedCards = new List<BasicCard>();
         SelectedCard = null;
+        CardToSwitch = null;
     }
 
     #region DeckCreation
-    public bool CardMoved()
+    public void CardMoved()
     {
         OnCardMoved?.Invoke(selectedCard);
         SelectedCard = null;
-
-        //TODO add money check
-        return true;
     }
 
     public bool CardPlaced()

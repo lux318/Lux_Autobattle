@@ -31,13 +31,11 @@ public class CardZone : MonoBehaviour
         {
             zoneButton.gameObject.SetActive(true);
             //Graphic stuff
-            OnCardUpdated?.Invoke();
         }
         else
         {
             zoneButton.gameObject.SetActive(false);
             //Graphic stuff
-            OnCardUpdated?.Invoke();
         }
     }
 
@@ -45,7 +43,8 @@ public class CardZone : MonoBehaviour
     {
         if (this.actualCard == card)
         {
-            this.actualCard = null;
+            this.actualCard = DeckManager.Instance.CardToSwitch;
+            DeckManager.Instance.CardToSwitch = null;
             OnCardUpdated?.Invoke();
         }
     }
@@ -55,33 +54,37 @@ public class CardZone : MonoBehaviour
         var selectedCard = DeckManager.Instance.SelectedCard;
 
         //Check if the zone is free
-        if (actualCard != null)
-        {
-            //if (actualCard.ActualStats.cardID == DeckManager.Instance.SelectedCard.ActualStats.cardID)
-            //{
-            //    Debug.Log("TODO Logica upgrade livello");
-            //    DeckManager.Instance.SelectedCard = null;
-            //    return;
-            //}
-            //else
-                return;
-        }
+        //if (actualCard != null)
+        //{
+        //if (actualCard.ActualStats.cardID == DeckManager.Instance.SelectedCard.ActualStats.cardID)
+        //{
+        //    Debug.Log("TODO Logica upgrade livello");
+        //    DeckManager.Instance.SelectedCard = null;
+        //    return;
+        //}
+        //else
+        //        return;
+        //}
 
         //Check if the card was already in another zone
         if (selectedCard.IsOwned)
         {
-            //Remove card from previous zone to put it in the new one
-            if (DeckManager.Instance.CardMoved())
+            if (actualCard != null)
             {
-                actualCard = selectedCard;
-                OnCardUpdated?.Invoke();
+                //TODO aumento di livello con 2 carte uguali??
+                DeckManager.Instance.CardToSwitch = actualCard;
             }
+
+            //Remove card from previous zone to put it in the new one
+            DeckManager.Instance.CardMoved();
+            actualCard = selectedCard;
+            OnCardUpdated?.Invoke();
 
             //Graphics stuff!!
             return;
         }
 
-        if (DeckManager.Instance.CardPlaced())
+        if (DeckManager.Instance.CardPlaced() && actualCard == null)
         {
             actualCard = selectedCard;
             OnCardUpdated?.Invoke();

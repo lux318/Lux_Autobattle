@@ -24,6 +24,7 @@ public class CardZoneGraphics : MonoBehaviour
         {
             cardZone.ActualCard.gameObject.transform.SetParent(transform);
             cardZone.ActualCard.gameObject.transform.localPosition = Vector3.zero;
+            cardZone.ActualCard.gameObject.transform.SetAsFirstSibling();
         }
     }
 }
