@@ -15,9 +15,7 @@ public class BasicCard : MonoBehaviour
     [SerializeField]
     private Color selectedColor = Color.yellow;
     [SerializeField]
-    private Button selectButton;
-    [SerializeField]
-    private Button deselectButton;
+    private Button cardButton;
 
     [Header("Label References")]
     [SerializeField]
@@ -27,16 +25,22 @@ public class BasicCard : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI atkLabel;
     [SerializeField]
-    private TextMeshProUGUI speedLabel;
-    [SerializeField]
     private Image sprite;
 
-    public BasicCardScriptable actualStats;
+    //Card settings
+    private BasicCardScriptable actualStats;
+    private bool isOwned;
+
+    public BasicCardScriptable ActualStats { get => actualStats; }
+    public bool IsOwned { get => isOwned; set => isOwned = value; }
 
     private void Start()
     {
-        selectButton.onClick.AddListener(OnSelect);
-        deselectButton.onClick.AddListener(OnDeselect);
+        if (cardButton == null)
+            cardButton = GetComponentInChildren<Button>();
+        cardButton.onClick.AddListener(OnSelect);
+
+        DeckManager.Instance.OnCardSelected += OnCardSelected;
     }
 
     public void Initialize(BasicCardScriptable card)
@@ -46,37 +50,41 @@ public class BasicCard : MonoBehaviour
         nameLabel.text = card.cardName;
         hpLabel.text = card.hp.ToString();
         atkLabel.text = card.atk.ToString();
-        speedLabel.text = card.speed.ToString();
         sprite.sprite = card.sprite;
+        isOwned = false;
 
         //Reset graphic
-        selectButton.gameObject.SetActive(true);
-        deselectButton.gameObject.SetActive(false);
         bgImage.color = unselectedColor;
     }
 
     public void OnSelect()
     {
-        if (DeckManager.Instance.HasReachMaxLength())
-            return;
+        if (DeckManager.Instance.SelectedCard == this)
+        {
+            DeckManager.Instance.SelectedCard = null;
 
-        //Change bg color
-        bgImage.color = selectedColor;
-        //Switch buttons
-        selectButton.gameObject.SetActive(false);
-        deselectButton.gameObject.SetActive(true);
-        //Add to deck manager list
-        DeckManager.Instance.AddCard(this);
+            //Graphic feedbacks
+            bgImage.color = unselectedColor;
+            //
+        }
+        else
+        {
+            DeckManager.Instance.SelectedCard = this;
+
+            //Graphic feedbacks
+            bgImage.color = selectedColor;
+            //
+        }
     }
 
-    public void OnDeselect()
+    public void OnCardSelected(BasicCard card)
     {
-        //Change bg color
-        bgImage.color = unselectedColor;
-        //Switch buttons
-        deselectButton.gameObject.SetActive(false);
-        selectButton.gameObject.SetActive(true);
-        //Remove from deck manager list
-        DeckManager.Instance.RemoveCard(this);
+        if (card != this)
+        {
+            //Graphic feedbacks
+            bgImage.color = unselectedColor;
+            //
+        }
+
     }
 }

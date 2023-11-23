@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Jobs;
 using UnityEngine.Pool;
 
 public class CardsPooler : MonoBehaviour
@@ -36,22 +36,30 @@ public class CardsPooler : MonoBehaviour
 
     public void RandomizePool()
     {
-        //Clear actual active cards list keeping selected cards
+        //Clear card selection
+        DeckManager.Instance.SelectedCard = null;
+
+        //Clear actual active cards list
+        var cardsTopRemove = new List<BasicCard>();
         foreach (var activeCard in activeCards)
         {
-            if (!DeckManager.Instance.SelectedCards.Contains(activeCard))
+            if (activeCard.transform.parent == cardsParent)
                 bulletPool.Release(activeCard);
+            else
+                cardsTopRemove.Add(activeCard);
         }
-        activeCards.Clear();
+        
+        //Remove selected cards from the list
+        foreach (var card in cardsTopRemove)
+        {
+            activeCards.Remove(card);
+        }
 
-        //Add to the list again the cards that we keep
-        foreach (var selectedCard in DeckManager.Instance.SelectedCards)
-            activeCards.Add(selectedCard);
+        activeCards.Clear();
 
         //Create needed cards and initialize those using random scriptable
         Random.InitState((int)System.DateTime.Now.Ticks);
-        int count = initialPoolSize - activeCards.Count;
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < initialPoolSize; i++)
         {
             int randomIndex = Random.Range(0, basicCardScriptables.Length);
             BasicCardScriptable cardScriptable = basicCardScriptables[randomIndex];
@@ -60,18 +68,7 @@ public class CardsPooler : MonoBehaviour
         }
     }
 
-    public void ClearPool()
-    {
-        foreach (var activeCard in activeCards)
-        {
-            bulletPool.Release(activeCard);
-        }
-        activeCards.Clear();
-        DeckManager.Instance.ClearCards();
-    }
-
-
-    #region BulletPooling
+    #region CardsPooling
     //Initialize pool
     public void InitializePool()
     {
