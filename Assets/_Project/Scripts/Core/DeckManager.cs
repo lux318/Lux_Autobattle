@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,66 +11,87 @@ using UnityEditor;
 public class DeckManager : Singleton<DeckManager>
 {
     [SerializeField]
-    private int maxCardsCount;
-
+    private List<CardZone> zones;
     private List<BasicCard> selectedCards;
-
     private string jsonDeck;
+    private BasicCard selectedCard;
 
-    public UnityEvent LastCardAdded;
-    public UnityEvent LastCardRemoved;
+    public BasicCard SelectedCard
+    {
+        get => selectedCard;
+        set
+        {
+            selectedCard = value;
+            OnCardSelected?.Invoke(selectedCard);
+        }
+    }
 
-    public List<BasicCard> SelectedCards { get => selectedCards; }
+    public delegate void CardDelegate(BasicCard card);
+    public event CardDelegate OnCardSelected;
+    public event CardDelegate OnCardMoved;
+    public event CardDelegate OnCardPlaced;
+
 
     private void Start()
     {
-        selectedCards= new List<BasicCard>();
+        zones = new List<CardZone>(zones.OrderBy((t) => t.ZoneIndex).ToList());
+        selectedCards = new List<BasicCard>();
+        SelectedCard = null;
     }
 
-    public void AddCard(BasicCard card)
+    #region DeckCreation
+    public bool CardMoved()
     {
-        selectedCards.Add(card);
-        if (maxCardsCount == selectedCards.Count)
-            LastCardAdded?.Invoke();
+        OnCardMoved?.Invoke(selectedCard);
+        SelectedCard = null;
+
+        //TODO add money check
+        return true;
     }
 
-    public void RemoveCard(BasicCard card)
+    public bool CardPlaced()
     {
-        selectedCards.Remove(card);
-        if (maxCardsCount - 1 == selectedCards.Count)
-            LastCardRemoved?.Invoke();
+        selectedCard.IsOwned = true;
+        OnCardPlaced?.Invoke(selectedCard);
+        SelectedCard = null;
+
+        //TODO add money check
+        return true;
     }
 
-    public void ClearCards()
+    //Put the selected cards in the deck in the correct order
+    public void CreateOrderedDeck()
     {
-        selectedCards.Clear();
-    }
+        foreach (var zone in zones)
+        {
+            if (zone.ActualCard != null)
+                selectedCards.Add(zone.ActualCard);
 
-    public bool HasReachMaxLength()
-    {
-        return selectedCards.Count == maxCardsCount;
+            Debug.Log(zone.ActualCard);
+        }
+        SubmitDeck();
     }
 
     ////////////////////////////////// USE DTO ////////////////////////////////////////
-    public void SubmitDeck()
+    private void SubmitDeck()
     {
         DeckContainerDTO deckContainerDTo = new DeckContainerDTO();
 
         deckContainerDTo.deck.DiceResult = 20;
         foreach (var card in selectedCards)
         {
-            deckContainerDTo.deck.Cards.Add(new Card(card.actualStats.cardID, 1)); //TODO add level
+            deckContainerDTo.deck.Cards.Add(new Card(card.ActualStats.cardID, 1)); //TODO add level
         }
 
         jsonDeck = JsonUtility.ToJson(deckContainerDTo);
         Debug.Log(jsonDeck);
-        //Store the json somewhere
     }
 
     public string GetJsonDeck()
     {
         return jsonDeck;
     }
+    #endregion
 }
 
 #if UNITY_EDITOR
@@ -82,7 +104,7 @@ public class DeckManagerEditor : Editor
         DeckManager deckManager = (DeckManager)target;
 
         if (GUILayout.Button("Submit deck"))
-            deckManager.SubmitDeck();
+            deckManager.CreateOrderedDeck();
     }
 }
 #endif

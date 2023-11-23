@@ -11,5 +11,5 @@ public class BasicCardScriptable : ScriptableObject
     public Sprite sprite;
     public int hp;
     public int atk;
-    public int speed;
+    //public Ability ability
 }

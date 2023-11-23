@@ -145,18 +145,18 @@ public class BattleManager : MonoBehaviour
     public BattlePlayer GetPlayer(Queue<BasicCard> playersQueue)
     {
         var player1Current = playersQueue.Dequeue();
-        var player = new BattlePlayer(player1Current, player1Current.actualStats.hp);
+        var player = new BattlePlayer(player1Current, player1Current.ActualStats.hp);
         return player;
     }
 
     public bool Battle(BattlePlayer attack, ref BattlePlayer defense)
     {
-        combatLabel.text += $"-> {attack.reference.actualStats.cardName} hit for {attack.reference.actualStats.atk} ";
+        combatLabel.text += $"-> {attack.reference.ActualStats.cardName} hit for {attack.reference.ActualStats.atk} ";
         Debug.Log(combatLabel.text);
-        defense.currentHp -= attack.reference.actualStats.atk;
+        defense.currentHp -= attack.reference.ActualStats.atk;
         if (defense.currentHp <= 0)
         {
-            combatLabel.text += $"-> {defense.reference.actualStats.cardName} is defeated\n";
+            combatLabel.text += $"-> {defense.reference.ActualStats.cardName} is defeated\n";
             Debug.Log(combatLabel.text);
             defense = new BattlePlayer();
             return true;
