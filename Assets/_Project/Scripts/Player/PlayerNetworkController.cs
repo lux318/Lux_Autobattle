@@ -29,6 +29,9 @@ public class PlayerNetworkController : NetworkBehaviour
 		
 		//Funzione automatica per fare le chiamate (commentare per disabilitare l'automazione)
         RpcNotifyServerSpawnServerRpc(NetworkManager.Singleton.LocalClientId); 
+
+        //Automazione:
+        //Se sei client, manda rpc a server che mandi i dati a tutti
     }
 	
 
@@ -47,6 +50,7 @@ public class PlayerNetworkController : NetworkBehaviour
         if (NetworkManager.Singleton.ConnectedClients.Count == 2)
         {
             CallSendDeckInfoClientRpc();
+            CallSendDeckInfoServerRpc(); //Add server rpc call
         }
     }
 
@@ -56,6 +60,12 @@ public class PlayerNetworkController : NetworkBehaviour
     {
         SendDeckInfo();
     }
+    [ServerRpc]
+    private void CallSendDeckInfoServerRpc()
+    {
+        SendDeckInfo();
+    }
+
 
     [Command]
     public void SendDeckInfo()

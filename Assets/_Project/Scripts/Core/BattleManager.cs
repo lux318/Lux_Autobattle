@@ -221,10 +221,11 @@ public class BattleManager : Singleton<BattleManager>
 
     public void CombatEnded(ref BattlePlayer player1, ref BattlePlayer player2)
     {
+        combatLabel.text += $"\n";
         //Check the players defeated
         if (player1.currentHp <= 0)
         {
-            combatLabel.text += $"\n-> {player1.reference.ActualStats.cardName} is defeated\n";
+            combatLabel.text += $"-> {player1.reference.ActualStats.cardName} is defeated\n";
             Debug.Log(combatLabel.text);
             player1 = new BattlePlayer();
         }
@@ -242,5 +243,6 @@ public class BattleManager : Singleton<BattleManager>
     {
         SceneManager.LoadScene(0);
         //Serve disconnettersi dal server o lo fa da solo?
+        //VA DISCONNESSO!!!!
     }
 }
