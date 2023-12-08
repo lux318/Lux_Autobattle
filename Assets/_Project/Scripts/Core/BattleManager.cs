@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -61,7 +61,7 @@ public class BattleManager : Singleton<BattleManager>
         remotePlayerQueue = CreateDeckWithBuff(remotePlayerDeck);
 
         //Start battle
-        SetUpBattle();
+        SetUpBattle(localPlayerDeck.DiceResult, remotePlayerDeck.DiceResult);
     }
 
     //Create ordered deck and apply buff for level and dice roll
@@ -79,7 +79,6 @@ public class BattleManager : Singleton<BattleManager>
                 if (card.cardID == scriptableCard.cardID)
                 {
                     correctScriptableCard = scriptableCard;
-                    Debug.Log($"Find Card: {correctScriptableCard.cardName}");
                     break;
                 }
             }
@@ -106,17 +105,19 @@ public class BattleManager : Singleton<BattleManager>
     #endregion
 
     #region Battle
-    public void SetUpBattle()
+    public void SetUpBattle(int localDiceRoll, int remoteDiceRoll)
     {
 
         combatResult = CombatResult.None;
         BattleStarted?.Invoke();
 
         combatLabel.text = "";
+        combatLabel.text += $"Your Dice roll: {localDiceRoll}\n";
         combatLabel.text += "Your Deck: ";
         foreach (var card in localPlayerQueue)
             combatLabel.text += $"{card.ActualStats.cardName} ({card.ActualStats.hp}hp, {card.ActualStats.atk}atk) ";
         combatLabel.text += "\n";
+        combatLabel.text += $"Opponent Dice roll: {remoteDiceRoll}\n";
         combatLabel.text += "Opponent Deck: ";
         foreach (var card in remotePlayerQueue)
             combatLabel.text += $"{card.ActualStats.cardName} ({card.ActualStats.hp}hp, {card.ActualStats.atk}atk) ";
@@ -162,7 +163,6 @@ public class BattleManager : Singleton<BattleManager>
             {
                 case CombatResult.None:
                     combatLabel.text += $"--- Start combat between {player1.reference.ActualStats.cardName} ({player1.currentHp}hp) and {player2.reference.ActualStats.cardName} ({player2.currentHp}hp) \n";
-                    Debug.Log(combatLabel.text);
                     //Made card battles
                     bool hasWinner = false;
                     while (hasWinner == false)
@@ -210,7 +210,6 @@ public class BattleManager : Singleton<BattleManager>
     public bool Battle(BattlePlayer attack, ref BattlePlayer defense)
     {
         combatLabel.text += $"-> {attack.reference.ActualStats.cardName} hit for {attack.reference.ActualStats.atk} ";
-        Debug.Log(combatLabel.text);
         defense.currentHp -= attack.reference.ActualStats.atk;
         if (defense.currentHp <= 0)
         {
@@ -241,8 +240,11 @@ public class BattleManager : Singleton<BattleManager>
     //DEBUG
     public void Restart()
     {
+        if (NetworkManager.Singleton != null)
+        {
+            Destroy(NetworkManager.Singleton.gameObject);
+        }
+        NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene(0);
-        //Serve disconnettersi dal server o lo fa da solo?
-        //VA DISCONNESSO!!!!
     }
 }
