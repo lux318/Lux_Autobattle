@@ -1,11 +1,8 @@
-using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BasicCard : MonoBehaviour
+public class DeckConstructionCard : BasicCard
 {
     [Header("Select Behaviour")]
     [SerializeField]
@@ -17,24 +14,12 @@ public class BasicCard : MonoBehaviour
     [SerializeField]
     private Button cardButton;
 
-    [Header("Label References")]
-    [SerializeField]
-    private TextMeshProUGUI nameLabel;
-    [SerializeField]
-    private TextMeshProUGUI hpLabel;
-    [SerializeField]
-    private TextMeshProUGUI atkLabel;
-    [SerializeField]
-    private Image sprite;
-
-    //Card settings
-    private BasicCardScriptable actualStats;
     private bool isOwned;
 
-    public BasicCardScriptable ActualStats { get => actualStats; }
     public bool IsOwned { get => isOwned; set => isOwned = value; }
 
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
         if (cardButton == null)
             cardButton = GetComponentInChildren<Button>();
@@ -43,14 +28,9 @@ public class BasicCard : MonoBehaviour
         DeckManager.Instance.OnCardSelected += OnCardSelected;
     }
 
-    public void Initialize(BasicCardScriptable card)
+    public override void Initialize(BasicCardScriptable card)
     {
-        //Initialize data
-        actualStats = card;
-        nameLabel.text = card.cardName;
-        hpLabel.text = card.hp.ToString();
-        atkLabel.text = card.atk.ToString();
-        sprite.sprite = card.sprite;
+        base.Initialize(card);
         isOwned = false;
 
         //Reset graphic
@@ -85,6 +65,5 @@ public class BasicCard : MonoBehaviour
             bgImage.color = unselectedColor;
             //
         }
-
     }
 }

@@ -3,11 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using System.Text;
 using QFSW.QC;
-using static LobbyManager;
-using Unity.Services.Lobbies.Models;
-using Unity.VisualScripting;
+using Unity.Services.Relay.Models;
 
 public class PlayerNetworkController : NetworkBehaviour
 {
@@ -81,6 +78,8 @@ public class PlayerNetworkController : NetworkBehaviour
         if (IsOwner) return;
         DeckContainerDTO deckDto = JsonUtility.FromJson<DeckContainerDTO>(jsonData);
         Debug.Log("Server sent this : " + deckDto.ToString());
+
+        SetUpBattle(deckDto);
     }
 
 	//Funzione che da l'errore di richiesta ownership 
@@ -89,9 +88,18 @@ public class PlayerNetworkController : NetworkBehaviour
     {
         DeckContainerDTO deckDto = JsonUtility.FromJson<DeckContainerDTO>(jsonData);
         Debug.Log("Client sent this : " + deckDto);
+
+        SetUpBattle(deckDto);
     }
 
 
     public string GetNamePlayer() { return namePlayer; }
+
+    private void SetUpBattle(DeckContainerDTO remoteDTO)
+    {
+        DeckDTO localDeck = JsonUtility.FromJson<DeckContainerDTO>(jsonDeck).deck;
+        DeckDTO remoteDeck = remoteDTO.deck;
+        BattleManager.Instance.Init(localDeck, remoteDeck);
+    }
 
 }

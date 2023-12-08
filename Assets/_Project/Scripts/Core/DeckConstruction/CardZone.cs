@@ -8,11 +8,11 @@ public class CardZone : MonoBehaviour
 {
     [SerializeField]
     private int zoneIndex;
-    private BasicCard actualCard;
+    private DeckConstructionCard actualCard;
     private Button zoneButton;
 
     public int ZoneIndex { get => zoneIndex; }
-    public BasicCard ActualCard { get => actualCard; }
+    public DeckConstructionCard ActualCard { get => actualCard; }
 
     public UnityEvent OnCardUpdated;
 
@@ -25,7 +25,7 @@ public class CardZone : MonoBehaviour
         zoneButton.gameObject.SetActive(false);
     }
 
-    private void CardSelected(BasicCard card)
+    private void CardSelected(DeckConstructionCard card)
     {
         if (card != null)
         {
@@ -39,7 +39,7 @@ public class CardZone : MonoBehaviour
         }
     }
 
-    private void OnCardMoved(BasicCard card)
+    private void OnCardMoved(DeckConstructionCard card)
     {
         if (this.actualCard == card)
         {

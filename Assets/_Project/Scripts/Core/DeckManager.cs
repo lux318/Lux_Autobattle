@@ -12,12 +12,12 @@ public class DeckManager : Singleton<DeckManager>
 {
     [SerializeField]
     private List<CardZone> zones;
-    private List<BasicCard> selectedCards;
+    private List<DeckConstructionCard> selectedCards;
     private string jsonDeck;
-    private BasicCard selectedCard;
-    private BasicCard cardToSwitch;
+    private DeckConstructionCard selectedCard;
+    private DeckConstructionCard cardToSwitch;
 
-    public BasicCard SelectedCard
+    public DeckConstructionCard SelectedCard
     {
         get => selectedCard;
         set
@@ -27,16 +27,19 @@ public class DeckManager : Singleton<DeckManager>
         }
     }
 
-    public BasicCard CardToSwitch
+    public DeckConstructionCard CardToSwitch
     {
         get => cardToSwitch;
         set => cardToSwitch = value;
     }
 
-    public delegate void CardDelegate(BasicCard card);
+    public delegate void CardDelegate(DeckConstructionCard card);
     public event CardDelegate OnCardSelected;
     public event CardDelegate OnCardMoved;
     public event CardDelegate OnCardPlaced;
+
+    //Debug Event
+    public UnityEvent deckSubmitted;
 
 
     private void Start()
@@ -66,7 +69,7 @@ public class DeckManager : Singleton<DeckManager>
     //Put the selected cards in the deck in the correct order
     public void CreateOrderedDeck()
     {
-        selectedCards = new List<BasicCard>();
+        selectedCards = new List<DeckConstructionCard>();
         foreach (var zone in zones)
         {
             if (zone.ActualCard != null)
@@ -90,6 +93,9 @@ public class DeckManager : Singleton<DeckManager>
 
         jsonDeck = JsonUtility.ToJson(deckContainerDTo);
         Debug.Log(jsonDeck);
+
+        //Debug event
+        deckSubmitted?.Invoke();
 
         //Start the matchmaking
         LobbyMatchMakerManager.Instance.CheckForLobbies();

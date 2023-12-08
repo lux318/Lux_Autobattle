@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -8,7 +9,7 @@ public class CardsPooler : MonoBehaviour
 {
     [Header("References")]
     [SerializeField]
-    private BasicCardScriptable[] basicCardScriptables;
+    private List<BasicCardScriptable> basicCardScriptables;
     [SerializeField]
     private GameObject basicCardPrefab;
     [SerializeField]
@@ -31,6 +32,12 @@ public class CardsPooler : MonoBehaviour
     private void Start()
     {
         activeCards = new List<BasicCard>();
+
+        basicCardScriptables = new List<BasicCardScriptable>();
+        var scriptables = Resources.LoadAll("Cards");
+        foreach (var scriptable in scriptables)
+            basicCardScriptables.Add(scriptable as BasicCardScriptable);
+
         InitializePool();
     }
 
@@ -61,7 +68,7 @@ public class CardsPooler : MonoBehaviour
         Random.InitState((int)System.DateTime.Now.Ticks);
         for (int i = 0; i < initialPoolSize; i++)
         {
-            int randomIndex = Random.Range(0, basicCardScriptables.Length);
+            int randomIndex = Random.Range(0, basicCardScriptables.Count);
             BasicCardScriptable cardScriptable = basicCardScriptables[randomIndex];
             var card = bulletPool.Get();
             card.Initialize(cardScriptable);

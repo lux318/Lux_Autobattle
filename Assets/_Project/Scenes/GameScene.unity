@@ -205,7 +205,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224130951485110974, guid: 9ed2a051c32b4fe47a5e4fb95c20b03f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000061035156
+      value: -0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 224166536479716514, guid: 9ed2a051c32b4fe47a5e4fb95c20b03f, type: 3}
       propertyPath: m_AnchorMax.y
@@ -788,28 +788,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffa85a800beaa2745bb2d55095abad77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aiDeck:
-  - {fileID: 11400000, guid: 99929cfc36bc49a4aaa724d4557d724f, type: 2}
-  - {fileID: 11400000, guid: f8853965c1608eb49892ded142ee452c, type: 2}
-  - {fileID: 11400000, guid: f779b9d5e2cd8394f833af92e65ef0e8, type: 2}
-  cardPrefab: {fileID: 3776450632147278384, guid: 00cc4adc0f2590f4c8494d0bf27b8210, type: 3}
-  aiCards: []
-  combatLabel: {fileID: 2074249085}
+  battleCardPrefab: {fileID: 3776450632147278796, guid: a87a378ccb57c124e97801be1438f237, type: 3}
   BattleStarted:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1866576932}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 59155076}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -849,6 +831,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  combatLabel: {fileID: 2074249085}
 --- !u!4 &59695704
 Transform:
   m_ObjectHideFlags: 0
@@ -1663,6 +1646,21 @@ MonoBehaviour:
   - {fileID: 1785492480}
   - {fileID: 38157723}
   - {fileID: 815207002}
+  deckSubmitted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1866576932}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &654482518
 Transform:
   m_ObjectHideFlags: 0
@@ -3148,58 +3146,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1779322494}
-        m_TargetAssemblyTypeName: CardsPooler, Assembly-CSharp
-        m_MethodName: ClearPool
+      - m_Target: {fileID: 59695703}
+        m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+        m_MethodName: Restart
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1866576932}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 59155076}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 486182438}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 192770960}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3417,11 +3367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d30d3b6a0067cbe4cae42f5bc2279afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basicCardScriptables:
-  - {fileID: 11400000, guid: be94d38700c7d074caa7f7992097e316, type: 2}
-  - {fileID: 11400000, guid: 5950679811e3ae743ba7f77e49974a4b, type: 2}
-  - {fileID: 11400000, guid: 95cafcfcf6c4d3049b18b591c7d3ef95, type: 2}
-  - {fileID: 11400000, guid: bf96234e92172bb439522b6c07f0b8eb, type: 2}
+  basicCardScriptables: []
   basicCardPrefab: {fileID: 3776450632147278796, guid: 00cc4adc0f2590f4c8494d0bf27b8210, type: 3}
   cardsParent: {fileID: 974516139}
   initialPoolSize: 3
