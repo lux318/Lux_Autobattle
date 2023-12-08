@@ -17,4 +17,3 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 906da89b6fb67ff4e93764d55a8d3612, type: 3}
   hp: 10
   atk: 2
-  speed: 2

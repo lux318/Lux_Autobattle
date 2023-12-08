@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -33,11 +34,18 @@ public class BattleManager : Singleton<BattleManager>
     {
         public BattleCard reference;
         public int currentHp;
+        public int currentAtk;
 
-        public BattlePlayer(BattleCard _card, int _currentHp)
+        public BattlePlayer(BattleCard _card)
         {
             reference = _card;
-            currentHp = _currentHp;
+            currentHp = _card.ActualStats.hp + _card.ActualBuff; //TODO CONSIDER LEVEL
+            currentAtk = _card.ActualStats.atk + _card.ActualBuff; //TODO CONSIDER LEVEL
+        }
+
+        public void UpdateBuff()
+        {
+            //Todo consider ability to modify buff
         }
     }
 
@@ -47,6 +55,7 @@ public class BattleManager : Singleton<BattleManager>
     public void Init(DeckDTO localPlayerDeck, DeckDTO remotePlayerDeck)
     {
         Debug.Log("Init battle");
+        combatLabel.text = "";
 
         //Store the list of all the cards
         basicCardScriptables = new List<BasicCardScriptable>();
@@ -55,17 +64,17 @@ public class BattleManager : Singleton<BattleManager>
             basicCardScriptables.Add(scriptable as BasicCardScriptable);
 
         //Create local player deck queue
-        localPlayerQueue = CreateDeckWithBuff(localPlayerDeck);
+        localPlayerQueue = CreateDeckWithBuff(localPlayerDeck, "player1");
 
         //Create remote player deck queue
-        remotePlayerQueue = CreateDeckWithBuff(remotePlayerDeck);
+        remotePlayerQueue = CreateDeckWithBuff(remotePlayerDeck, "player2");
 
         //Start battle
-        SetUpBattle(localPlayerDeck.DiceResult, remotePlayerDeck.DiceResult);
+        SetUpBattle();
     }
 
     //Create ordered deck and apply buff for level and dice roll
-    public Queue<BattleCard> CreateDeckWithBuff(DeckDTO deck)
+    public Queue<BattleCard> CreateDeckWithBuff(DeckDTO deck, string playerName)
     {
         Queue<BattleCard> queue = new Queue<BattleCard>();
 
@@ -94,7 +103,8 @@ public class BattleManager : Singleton<BattleManager>
             battleCard.BuffCardWithLevel(card.cardLevel);
 
             //Buff correspondent card using dice roll
-            battleCard.BuffCardWithDiceRoll(deck.DiceResult);
+            battleCard.BuffCardWithDiceRoll(card.cardDiceRoll);
+            DiceResultFeedback(playerName, card.cardDiceRoll, battleCard.ActualStats.cardName);
 
             //Add card to the Queue
             queue.Enqueue(battleCard);
@@ -102,25 +112,29 @@ public class BattleManager : Singleton<BattleManager>
 
         return queue;
     }
+
+    private void DiceResultFeedback(string playerName, int diceRoll, string cardName)
+    {
+        combatLabel.text += $"{playerName} rolls {diceRoll} for {cardName}, ";
+    }
     #endregion
 
     #region Battle
-    public void SetUpBattle(int localDiceRoll, int remoteDiceRoll)
+    public void SetUpBattle()
     {
 
         combatResult = CombatResult.None;
         BattleStarted?.Invoke();
 
-        combatLabel.text = "";
-        combatLabel.text += $"Your Dice roll: {localDiceRoll}\n";
-        combatLabel.text += "Your Deck: ";
+        //combatLabel.text += $"Your Dice roll: {localDiceRoll}\n";
+        combatLabel.text += "\nYour Deck: ";
         foreach (var card in localPlayerQueue)
-            combatLabel.text += $"{card.ActualStats.cardName} ({card.ActualStats.hp}hp, {card.ActualStats.atk}atk) ";
+            combatLabel.text += $"{card.ActualStats.cardName} ({card.ActualStats.hp + card.ActualBuff}hp, {card.ActualStats.atk + card.ActualBuff}atk) ";
         combatLabel.text += "\n";
-        combatLabel.text += $"Opponent Dice roll: {remoteDiceRoll}\n";
+        //combatLabel.text += $"Opponent Dice roll: {remoteDiceRoll}\n";
         combatLabel.text += "Opponent Deck: ";
         foreach (var card in remotePlayerQueue)
-            combatLabel.text += $"{card.ActualStats.cardName} ({card.ActualStats.hp}hp, {card.ActualStats.atk}atk) ";
+            combatLabel.text += $"{card.ActualStats.cardName} ({card.ActualStats.hp + card.ActualBuff}hp, {card.ActualStats.atk + card.ActualBuff}atk) ";
         combatLabel.text += "\n";
 
         StartCoroutine(CombatPhase());
@@ -203,14 +217,14 @@ public class BattleManager : Singleton<BattleManager>
     public BattlePlayer GetPlayer(Queue<BattleCard> playersQueue)
     {
         var player1Current = playersQueue.Dequeue();
-        var player = new BattlePlayer(player1Current, player1Current.ActualStats.hp);
+        var player = new BattlePlayer(player1Current);
         return player;
     }
 
     public bool Battle(BattlePlayer attack, ref BattlePlayer defense)
     {
-        combatLabel.text += $"-> {attack.reference.ActualStats.cardName} hit for {attack.reference.ActualStats.atk} ";
-        defense.currentHp -= attack.reference.ActualStats.atk;
+        combatLabel.text += $"-> {attack.reference.ActualStats.cardName} hit for {attack.currentAtk} ";
+        defense.currentHp -= attack.currentAtk;
         if (defense.currentHp <= 0)
         {
             return true;

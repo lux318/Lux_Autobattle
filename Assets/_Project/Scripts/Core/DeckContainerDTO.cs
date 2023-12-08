@@ -19,16 +19,12 @@ public class DeckDTO
 {
     [SerializeField]
     private List<Card> cards;
-    [SerializeField]
-    private int diceResult;
 
     public List<Card> Cards { get => cards; set => cards = value; }
-    public int DiceResult { get => diceResult; set => diceResult = value; }
 
     public DeckDTO()
     {
         cards = new List<Card>();
-        diceResult = 0;
     }
 }
 
@@ -37,11 +33,13 @@ public class Card
 {
     public int cardID;
     public int cardLevel;
+    public int cardDiceRoll;
 
-    public Card (int cardID, int cardLevel)
+    public Card (int cardID, int cardLevel, int cardDiceRoll)
     {
         this.cardID = cardID;
         this.cardLevel = cardLevel;
+        this.cardDiceRoll = cardDiceRoll;
     }
 }
 

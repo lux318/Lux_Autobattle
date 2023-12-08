@@ -4,17 +4,37 @@ using UnityEngine;
 
 public class BattleCard : BasicCard
 {
+    private int actualBuff;
+
+    public int ActualBuff { get => actualBuff; }
+
+    public override void Initialize(BasicCardScriptable card)
+    {
+        base.Initialize(card);
+        actualBuff = 0;
+    }
 
     //Battle card deve avere metodi per buffare carta in base a livello e dado
     public void BuffCardWithLevel(int level)
     {
         Debug.Log("Todo buff with level");
-        //actualStats.atk += level;
+        //actualBuff += Calcolo in base al livello
     }
 
     public void BuffCardWithDiceRoll(int diceResult)
     {
-        Debug.Log("Todo buff with dice roll");
+        //Togliere interi? Capire cdome usare buff
+
+        //Calculate buff
+        actualBuff += Mathf.FloorToInt(diceResult / 4);
+        Debug.Log($"{actualStats.cardName} has a buff of {actualBuff}");
+    }
+
+    public void BuffCardWithAbility()
+    {
+        //Calculate buff
+        //actualBuff += //Aggiungere buff
+        //Debug.Log($"{actualStats.cardName} has a buff of {actualBuff}");
     }
 
     public void MoveCard()

@@ -85,10 +85,12 @@ public class DeckManager : Singleton<DeckManager>
     {
         DeckContainerDTO deckContainerDTo = new DeckContainerDTO();
 
-        deckContainerDTo.deck.DiceResult = 20;
+        //Randomize seed
+        Random.InitState((int)System.DateTime.Now.Ticks);
+
         foreach (var card in selectedCards)
         {
-            deckContainerDTo.deck.Cards.Add(new Card(card.ActualStats.cardID, 1)); //TODO add level
+            deckContainerDTo.deck.Cards.Add(new Card(card.ActualStats.cardID, 1, Random.Range(1, 20))); //TODO add level
         }
 
         jsonDeck = JsonUtility.ToJson(deckContainerDTo);
