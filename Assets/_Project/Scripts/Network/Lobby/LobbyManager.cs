@@ -80,8 +80,8 @@ public class LobbyManager : MonoBehaviour
     {
         if(IsLobbyHost())
         {
-            heartBeatTimer = Time.deltaTime;
-            if(heartBeatTimer < 0f)
+            heartBeatTimer = -Time.deltaTime;
+            if(heartBeatTimer <= 0f)
             {
                 float heartBeatTimerMax = 15f;
                 heartBeatTimer = heartBeatTimerMax;
