@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using static Economy;
 
 public class CardZone : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class CardZone : MonoBehaviour
     {
         DeckManager.Instance.OnCardSelected += CardSelected;
         DeckManager.Instance.OnCardMoved += OnCardMoved;
+
         zoneButton = GetComponentInChildren<Button>(true);
         zoneButton.onClick.AddListener(OnZoneClick);
         zoneButton.gameObject.SetActive(false);
@@ -49,8 +51,10 @@ public class CardZone : MonoBehaviour
         }
     }
 
+
     private void OnZoneClick()
     {
+
         var selectedCard = DeckManager.Instance.SelectedCard;
 
         //Check if the zone is free
@@ -66,6 +70,7 @@ public class CardZone : MonoBehaviour
         //        return;
         //}
 
+        
         //Check if the card was already in another zone
         if (selectedCard.IsOwned)
         {
@@ -86,14 +91,17 @@ public class CardZone : MonoBehaviour
 
         if (actualCard == null)
         {
-            if (DeckManager.Instance.CardPlaced())
+            if (Economy.Instance.actualEconomy < selectedCard.ActualStats.cost)
             {
-                actualCard = selectedCard;
-                OnCardUpdated?.Invoke();
-
-                //Graphics stuff!!
                 return;
             }
+            Economy.Instance.OnBuyPressed(selectedCard.ActualStats.cost);
+            actualCard = selectedCard;
+            OnCardUpdated?.Invoke();
+            //Graphics stuff!!
+            return;
+
         }
+
     }
 }

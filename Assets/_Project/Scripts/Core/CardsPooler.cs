@@ -1,9 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.UI;
+using static Economy;
+using Random = UnityEngine.Random;
 
 public class CardsPooler : MonoBehaviour
 {
@@ -28,6 +33,8 @@ public class CardsPooler : MonoBehaviour
     private int poolMaxSize = 10000;
     private List<BasicCard> activeCards;
 
+    [SerializeField]
+    private Button rollButton;
 
     private void Start()
     {
@@ -39,9 +46,28 @@ public class CardsPooler : MonoBehaviour
             basicCardScriptables.Add(scriptable as BasicCardScriptable);
 
         InitializePool();
+        RandomizePool();
+
+        Economy.Instance.OnEconomyRoll += Events_OnEconomyRollEventArgs;
+        DeckManager.Instance.OnCardSold += Events_OnSoldCardEventArgs;
     }
 
-    public void RandomizePool()
+    private void Events_OnEconomyRollEventArgs(object sender, OnEconomySpentEventArgs e)
+    {
+        RandomizePool();
+    }
+
+    private void Events_OnSoldCardEventArgs(DeckConstructionCard c)
+    {
+        RemoveCard();
+    }
+
+    private void RemoveCard() {
+        activeCards.RemoveAll(i => i.Equals(null));
+    }
+
+
+    private void RandomizePool()
     {
         //Clear card selection
         DeckManager.Instance.SelectedCard = null;
@@ -50,10 +76,13 @@ public class CardsPooler : MonoBehaviour
         var cardsTopRemove = new List<BasicCard>();
         foreach (var activeCard in activeCards)
         {
+            if (!activeCard.Equals(null))
+            { 
             if (activeCard.transform.parent == cardsParent)
                 bulletPool.Release(activeCard);
             else
                 cardsTopRemove.Add(activeCard);
+            }
         }
         
         //Remove selected cards from the list
@@ -73,6 +102,7 @@ public class CardsPooler : MonoBehaviour
             var card = bulletPool.Get();
             card.Initialize(cardScriptable);
         }
+
     }
 
     #region CardsPooling

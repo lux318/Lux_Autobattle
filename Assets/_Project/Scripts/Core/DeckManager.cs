@@ -37,6 +37,7 @@ public class DeckManager : Singleton<DeckManager>
     public event CardDelegate OnCardSelected;
     public event CardDelegate OnCardMoved;
     public event CardDelegate OnCardPlaced;
+    public event CardDelegate OnCardSold;
 
     //Debug Event
     public UnityEvent deckSubmitted;
@@ -47,6 +48,13 @@ public class DeckManager : Singleton<DeckManager>
         zones = new List<CardZone>(zones.OrderBy((t) => t.ZoneIndex).ToList());
         SelectedCard = null;
         CardToSwitch = null;
+
+        Economy.Instance.OnEconomyBuy += Events_OnEconomyBuyEventArgs;
+    }
+
+    private void Events_OnEconomyBuyEventArgs(object sender, Economy.OnEconomySpentEventArgs e)
+    {
+        CardPlaced();
     }
 
     #region DeckCreation
@@ -58,12 +66,24 @@ public class DeckManager : Singleton<DeckManager>
 
     public bool CardPlaced()
     {
-        selectedCard.IsOwned = true;
-        OnCardPlaced?.Invoke(selectedCard);
-        SelectedCard = null;
+        if (selectedCard != null)
+        {
+            selectedCard.IsOwned = true;
+            OnCardPlaced?.Invoke(selectedCard);
+            SelectedCard = null;
 
-        //TODO add money check
-        return true;
+            //TODO add money check
+
+            return true;
+        }
+        return false;
+    }
+
+    public void CardSold()
+    {
+        OnCardSold?.Invoke(selectedCard);
+        Destroy(SelectedCard);
+        SelectedCard = null;
     }
 
     //Put the selected cards in the deck in the correct order

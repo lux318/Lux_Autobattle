@@ -17,3 +17,5 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 76534c96d2f330144af079dfb7146518, type: 3}
   hp: 8
   atk: 1
+  cost: 2
+  rarity: 1
