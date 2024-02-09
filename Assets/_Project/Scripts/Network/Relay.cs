@@ -27,8 +27,6 @@ public class Relay : MonoBehaviour
         {
             Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId);
         };
-
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
     [Command]
