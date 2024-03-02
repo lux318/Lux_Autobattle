@@ -33,7 +33,67 @@ public class SkillSystemManager : Singleton<SkillSystemManager>
         Debug.LogError($"{card.ActualStats.cardName} perform skill: {skill.skillName}");
     }
 
-    //Region con tutti i possibili target
+   //Calculate targets for the skill
+    public List<BattleCard> FindTargets(Target skillTarget)
+    {
+        List<BattleCard> targets = new List<BattleCard>();
 
-    //Region con tutti i possibili What. Qui verranno usati how much e duration?
+        switch (skillTarget)
+        {
+            case Target.HimSelf:
+                break;
+            case Target.BackAlly:
+                break;
+            case Target.FrontAlly:
+                break;
+            case Target.AllOthers:
+                break;
+            case Target.FrontAndBack:
+                break;
+            case Target.RandomEnemy:
+                break;
+            case Target.RandomOtherAlly:
+                break;
+        }
+        return targets;
+    }
+
+    //Calculate skill data
+    public float CalculateData(SkillScriptable skill)
+    {
+        float result = 0;
+
+        switch (skill.hmType)
+        {
+            case HowMuchType.Dice:
+                //Lanciare il relativo dado e scegliere come usare il valore
+                break;
+            case HowMuchType.Percentage:
+                result = skill.percentageValue; //Da capire come convertirlo
+                break;
+            case HowMuchType.Value:
+                result = skill.value;
+                break;
+        }
+
+        return result;
+    }
+
+    //Apply skill effects
+    public void ApplyEffect(What skillEffect, List<BattleCard> skillTargets, int value)
+    {
+        switch (skillEffect)
+        {
+            case What.DamageSkill:
+                break;
+            case What.BuffSkill:
+                break;
+            case What.Dodge:
+                break;
+            case What.RepeatAction:
+                break;
+        }
+    }
+
+    //e duration? Dove gestisco la situa "buff temporanei"? Aggiungere conteggio nella battle card?
 }

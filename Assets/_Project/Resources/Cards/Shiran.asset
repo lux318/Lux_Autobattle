@@ -19,3 +19,4 @@ MonoBehaviour:
   atk: 1
   cost: 2
   rarity: 1
+  skill: {fileID: 11400000, guid: 4040323086001ca47a09b239bd9ff66d, type: 2}

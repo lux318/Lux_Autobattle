@@ -4,6 +4,7 @@ using UnityEngine;
 [CustomEditor(typeof(SkillScriptable))]
 public class SkillScriptableEditor : Editor
 {
+
     public override void OnInspectorGUI()
     {
         SkillScriptable skill = target as SkillScriptable;
@@ -27,18 +28,18 @@ public class SkillScriptableEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("How Much");
-        skill.type = (HowMuchType)EditorGUILayout.EnumPopup("How much type: ", skill.type);
+        skill.hmType = (HowMuchType)EditorGUILayout.EnumPopup("How much type: ", skill.hmType);
 
-        if (skill.type == HowMuchType.dice)
+        if (skill.hmType == HowMuchType.Dice)
         {
-            skill.dice = (Dices)EditorGUILayout.EnumPopup("Dice: ", skill.dice);
-            skill.dicesNumber = EditorGUILayout.IntField("Diced number: ", skill.dicesNumber);
+            skill.diceMaxValue = EditorGUILayout.IntField("Dice max value: ", skill.diceMaxValue);
+            skill.dicesNumber = EditorGUILayout.IntField("Dice number: ", skill.dicesNumber);
         }
-        if (skill.type == HowMuchType.percentage)
+        if (skill.hmType == HowMuchType.Percentage)
         {
             skill.percentageValue = EditorGUILayout.IntField("Percentage: ", skill.percentageValue);
         }
-        if (skill.type == HowMuchType.value)
+        if (skill.hmType == HowMuchType.Value)
         {
             skill.value = EditorGUILayout.FloatField("value: ", skill.value);
         }
@@ -46,7 +47,10 @@ public class SkillScriptableEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("How Long");
-        skill.skillRoundDuration = EditorGUILayout.IntField("Round duration: ", skill.skillRoundDuration);
+        skill.dType = (DurationType)EditorGUILayout.EnumPopup("How much type: ", skill.dType);
+
+        if (skill.dType == DurationType.Round)
+            skill.skillRoundDuration = EditorGUILayout.IntField("Round duration: ", skill.skillRoundDuration);
 
 
         EditorUtility.SetDirty(skill);
