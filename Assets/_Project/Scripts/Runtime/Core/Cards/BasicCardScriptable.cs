@@ -13,5 +13,5 @@ public class BasicCardScriptable : ScriptableObject
     public int atk;
     public int cost;
     public int rarity;
-    //public Ability ability
+    public SkillScriptable skill;
 }

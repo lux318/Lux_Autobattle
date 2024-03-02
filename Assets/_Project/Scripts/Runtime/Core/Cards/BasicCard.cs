@@ -16,8 +16,10 @@ public class BasicCard : MonoBehaviour
 
     //Card settings
     protected BasicCardScriptable actualStats;
+    protected SkillScriptable actualSkill;
 
     public BasicCardScriptable ActualStats { get => actualStats; }
+    public SkillScriptable ActualSkill { get => actualSkill; }
 
 
     public virtual void Initialize(BasicCardScriptable card)
@@ -34,5 +36,6 @@ public class BasicCard : MonoBehaviour
         hpLabel.text = card.hp.ToString();
         atkLabel.text = card.atk.ToString();
         sprite.sprite = card.sprite;
+        actualSkill = card.skill;
     }
 }

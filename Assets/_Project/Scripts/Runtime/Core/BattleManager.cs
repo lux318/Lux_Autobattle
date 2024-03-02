@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -13,17 +12,29 @@ public class BattleManager : Singleton<BattleManager>
     [SerializeField]
     private GameObject battleCardPrefab;
 
-
-    //Decks PUBLIC FOR DEBUG. MAKE PRIVATE
-    public Queue<BattleCard> localPlayerQueue;
-    public Queue<BattleCard> remotePlayerQueue;
-
+    private Queue<BattleCard> localPlayerQueue;
+    private Queue<BattleCard> remotePlayerQueue;
     private CombatResult combatResult = CombatResult.None;
     private List<BasicCardScriptable> basicCardScriptables;
 
+    #region Properties
+    public Queue<BattleCard> LocalPlayerQueue { get => localPlayerQueue; }
+    public Queue<BattleCard> RemotePlayerQueue { get => remotePlayerQueue; }
+    #endregion
+
+    #region Events
+    //BattlePhases
+    //Unity events
     public UnityEvent BattleStarted;
     public UnityEvent BattleEnded;
 
+    //Delegates
+    public delegate void BattlePhases(BattleCard card);
+    public event BattlePhases OnCardPlayed;
+    public event BattlePhases OnCardDeath;
+    public event BattlePhases OnCardAttack;
+    public event BattlePhases OnCardIsAttacked;
+    #endregion
 
     //DEBUG
     public TextMeshProUGUI combatLabel;
@@ -126,12 +137,10 @@ public class BattleManager : Singleton<BattleManager>
         combatResult = CombatResult.None;
         BattleStarted?.Invoke();
 
-        //combatLabel.text += $"Your Dice roll: {localDiceRoll}\n";
         combatLabel.text += "\nYour Deck: ";
         foreach (var card in localPlayerQueue)
             combatLabel.text += $"{card.ActualStats.cardName} ({card.ActualStats.hp + card.ActualBuff}hp, {card.ActualStats.atk + card.ActualBuff}atk) ";
         combatLabel.text += "\n";
-        //combatLabel.text += $"Opponent Dice roll: {remoteDiceRoll}\n";
         combatLabel.text += "Opponent Deck: ";
         foreach (var card in remotePlayerQueue)
             combatLabel.text += $"{card.ActualStats.cardName} ({card.ActualStats.hp + card.ActualBuff}hp, {card.ActualStats.atk + card.ActualBuff}atk) ";
@@ -162,7 +171,13 @@ public class BattleManager : Singleton<BattleManager>
                 if (localPlayerQueue.Count == 0)
                     combatResult = CombatResult.P2Wins;
                 else
+                {
                     player1 = GetPlayer(localPlayerQueue);
+
+                    //Trigger On play skill
+                    OnCardPlayed?.Invoke(player1.reference);
+                    Debug.LogError("ONPLAY PLAYER1");
+                }
             }
 
             if (player2.reference == null && combatResult != CombatResult.Tie)
@@ -170,7 +185,13 @@ public class BattleManager : Singleton<BattleManager>
                 if (remotePlayerQueue.Count == 0)
                     combatResult = CombatResult.P1Wins;
                 else
+                {
                     player2 = GetPlayer(remotePlayerQueue);
+
+                    //Trigger On play skill
+                    OnCardPlayed?.Invoke(player2.reference);
+                    Debug.LogError("ONPLAY PLAYER1");
+                }
             }
 
             switch (combatResult)
@@ -223,6 +244,11 @@ public class BattleManager : Singleton<BattleManager>
 
     public bool Battle(BattlePlayer attack, ref BattlePlayer defense)
     {
+        //Perform skills
+        OnCardAttack?.Invoke(attack.reference);
+        OnCardIsAttacked?.Invoke(defense.reference);
+        Debug.LogError("Attack/Is attacked skills");
+
         combatLabel.text += $"-> {attack.reference.ActualStats.cardName} hit for {attack.currentAtk} ";
         defense.currentHp -= attack.currentAtk;
         if (defense.currentHp <= 0)
@@ -238,12 +264,20 @@ public class BattleManager : Singleton<BattleManager>
         //Check the players defeated
         if (player1.currentHp <= 0)
         {
+            //Death skill
+            OnCardDeath?.Invoke(player1.reference);
+            Debug.LogError("Player1 Death skill");
+
             combatLabel.text += $"-> {player1.reference.ActualStats.cardName} is defeated\n";
             Debug.Log(combatLabel.text);
             player1 = new BattlePlayer();
         }
         if (player2.currentHp <= 0)
         {
+            //Death skill
+            OnCardDeath?.Invoke(player2.reference);
+            Debug.LogError("Player2 Death skill");
+
             combatLabel.text += $"-> {player2.reference.ActualStats.cardName} is defeated\n";
             Debug.Log(combatLabel.text);
             player2 = new BattlePlayer();

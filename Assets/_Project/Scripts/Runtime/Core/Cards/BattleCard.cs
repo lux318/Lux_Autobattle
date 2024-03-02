@@ -11,6 +11,7 @@ public class BattleCard : BasicCard
     public override void Initialize(BasicCardScriptable card)
     {
         base.Initialize(card);
+        SkillSystemManager.Instance.InitSkill(this, actualSkill);
         actualBuff = 0;
     }
 
@@ -40,5 +41,13 @@ public class BattleCard : BasicCard
     public void MoveCard()
     {
         Debug.Log("Todo move card in the correct spot");
+    }
+
+    //Perform skill
+    public void Perform(BattleCard card)
+    {
+        if (card != this)
+            return;
+        SkillSystemManager.Instance.PerformSkill(this, actualSkill);
     }
 }
