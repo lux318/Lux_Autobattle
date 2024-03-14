@@ -12,13 +12,20 @@ public class UI_AuthenticationSignType : MonoBehaviour
     private string passwordValue;
 
     [SerializeField] private Button btnSignType;
+    [SerializeField] private Button btnClose;
     [SerializeField] private TMP_InputField usernameInput;
     [SerializeField] private TMP_InputField passwordInput;
-    // Start is called before the first frame update
+
+
     void Awake()
     {
+        btnClose.onClick.AddListener(() =>
+        {
+            gameObject.SetActive(false);
+        });
         gameObject.SetActive(false);
     }
+    
     
 
     public void AddListenerSignIn()
@@ -30,6 +37,7 @@ public class UI_AuthenticationSignType : MonoBehaviour
             usernameValue = usernameInput.text;
             passwordValue = passwordInput.text;
             await AuthenticationManager.Instance.SignInWithUsernamePasswordAsync(usernameValue, passwordValue);
+            GameManager.Instance.ChangeScene("MenuScene");
         });
     }
 
@@ -43,6 +51,8 @@ public class UI_AuthenticationSignType : MonoBehaviour
             usernameValue = usernameInput.text;
             passwordValue = passwordInput.text;
             await AuthenticationManager.Instance.SignUpWithUsernamePasswordAsync(usernameValue, passwordValue);
+            GameManager.Instance.ChangeScene("MenuScene");
         });
     }
+
 }

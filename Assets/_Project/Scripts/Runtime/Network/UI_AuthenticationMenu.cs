@@ -21,6 +21,7 @@ public class UI_AuthenticationMenu : MonoBehaviour
         btnAnonymousSignIn.onClick.AddListener(async () => 
         {
             await AuthenticationManager.Instance.SignInAnonymouslyAsync();
+            GameManager.Instance.ChangeScene("MenuScene");
         });
 
         btnUserPwdSignIn.onClick.AddListener(() => OpenModalSignType(true));
