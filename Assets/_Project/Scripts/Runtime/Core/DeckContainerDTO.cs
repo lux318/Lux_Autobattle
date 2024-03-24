@@ -34,12 +34,14 @@ public class Card
     public int cardID;
     public int cardLevel;
     public int cardDiceRoll;
+    public int cardPosition;
 
-    public Card (int cardID, int cardLevel, int cardDiceRoll)
+    public Card (int cardID, int cardLevel, int cardDiceRoll, int cardPosition)
     {
         this.cardID = cardID;
         this.cardLevel = cardLevel;
         this.cardDiceRoll = cardDiceRoll;
+        this.cardPosition = cardPosition;
     }
 }
 

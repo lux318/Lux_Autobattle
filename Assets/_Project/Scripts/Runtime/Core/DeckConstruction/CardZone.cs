@@ -13,7 +13,7 @@ public class CardZone : MonoBehaviour
     private Button zoneButton;
 
     public int ZoneIndex { get => zoneIndex; }
-    public DeckConstructionCard ActualCard { get => actualCard; }
+    public DeckConstructionCard ActualCard { get => actualCard; set => actualCard = value; }
 
     public UnityEvent OnCardUpdated;
 
@@ -51,8 +51,12 @@ public class CardZone : MonoBehaviour
         }
     }
 
+    public void UpdateGraphichs()
+    {
+        OnCardUpdated?.Invoke();
+    }
 
-    private void OnZoneClick()
+    public void OnZoneClick()
     {
 
         var selectedCard = DeckManager.Instance.SelectedCard;
@@ -100,7 +104,6 @@ public class CardZone : MonoBehaviour
             OnCardUpdated?.Invoke();
             //Graphics stuff!!
             return;
-
         }
 
     }

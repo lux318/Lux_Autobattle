@@ -50,6 +50,16 @@ public class CardsPooler : MonoBehaviour
 
         Economy.Instance.OnEconomyRoll += Events_OnEconomyRollEventArgs;
         DeckManager.Instance.OnCardSold += Events_OnSoldCardEventArgs;
+        DeckManager.Instance.OnDeckCreating += Events_OnCardCreatingArgs;
+    }
+
+    private void Events_OnCardCreatingArgs(int idCard, int cardPosition)
+    {
+        BasicCard card = CreateCard();
+        card.gameObject.SetActive(true);
+        card.Initialize(basicCardScriptables[idCard]);
+
+        DeckManager.Instance.AddCardInZone((DeckConstructionCard)card, cardPosition);
     }
 
     private void Events_OnEconomyRollEventArgs(object sender, OnEconomySpentEventArgs e)

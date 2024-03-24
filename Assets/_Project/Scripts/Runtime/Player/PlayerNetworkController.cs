@@ -25,7 +25,6 @@ public class PlayerNetworkController : NetworkBehaviour
         Debug.Log("Spawn By Network!");
         jsonDeck = DeckManager.Instance.GetJsonDeck();
 		
-        PlayerClientController.Instance.setIdAndNamePlayer(NetworkManager.Singleton.LocalClientId, namePlayer);
 		
 		//Funzione automatica per fare le chiamate (commentare per disabilitare l'automazione)
         RpcNotifyServerSpawnServerRpc(NetworkManager.Singleton.LocalClientId); 

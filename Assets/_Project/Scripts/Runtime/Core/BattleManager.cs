@@ -1,5 +1,7 @@
+using QFSW.QC;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -217,12 +219,14 @@ public class BattleManager : Singleton<BattleManager>
                 case CombatResult.P1Wins:
                     combatLabel.text += $"P1 wins the battle";
                     Debug.Log("P1 win");
+                    PlayerClientController.Instance.GetSession().AddWins(1);
                     BattleEnded?.Invoke();
                     yield break;
 
                 case CombatResult.P2Wins:
                     combatLabel.text += $"P2 wins the battle";
                     Debug.Log("P2 win");
+                    PlayerClientController.Instance.GetSession().AddLose(1);
                     BattleEnded?.Invoke();
                     yield break;
                 case CombatResult.Tie:
@@ -285,7 +289,29 @@ public class BattleManager : Singleton<BattleManager>
     }
     #endregion
 
+
+    [Command]
+    public void MockWin()
+    {
+        PlayerClientController.Instance.GetSession().AddWins(1);
+        Debug.Log("Win mock");
+        BattleEnded?.Invoke();
+    }
+
+    [Command]
+    public void MockLose()
+    {
+        PlayerClientController.Instance.GetSession().AddLose(1);
+        Debug.Log("Lose mock");
+        if (PlayerClientController.Instance.GetSession().GetLife() < 7)
+        {
+            PlayerClientController.Instance.ResetSession();
+            //Ricaricare una scena (o il game stesso o il menu iniziale)
+        }
+        BattleEnded?.Invoke();
+    }
     //DEBUG
+    [Command]
     public void Restart()
     {
         if (NetworkManager.Singleton != null)
@@ -293,6 +319,5 @@ public class BattleManager : Singleton<BattleManager>
             Destroy(NetworkManager.Singleton.gameObject);
         }
         NetworkManager.Singleton.Shutdown();
-        SceneManager.LoadScene(0);
     }
 }
